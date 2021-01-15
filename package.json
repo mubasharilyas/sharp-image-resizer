@@ -1,0 +1,17 @@
+{
+  "name": "sharp-image-resizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mubashir Ilyas",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "got": "^11.8.1",
+    "sharp": "^0.27.0"
+  }
+}

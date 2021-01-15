@@ -1,0 +1,261 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+
+</head>
+
+<body>
+  <div id="image_manipulation" style="margin-top: 10%;">
+
+
+
+    <div class="container">
+      <div class="row centered-form justify-content-center align-items-center ">
+        <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Image Transformation </h3>
+            </div>
+            <div class="panel-body " style="margin-top: 50px;">
+
+              <!-- <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" name="first_name" id="first_name" class="form-control input-sm floatlabel" placeholder="First Name">
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" name="last_name" id="last_name" class="form-control input-sm" placeholder="Last Name">
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="form-group custom-file mb-3">
+                <input type="file" class="custom-file-input" id="customFile" name="sampleFile"
+                  @change="onFileChange($event)" accept="jpeg, png, webp, gif, svg">
+                <label class="custom-file-label" for="customFile">{{fileName?fileName:'Choose file'}}</label>
+                <!-- <label class="form-label" for="customFile">Default file input example</label>
+                  <input type="file" class="form-control" id="customFile" /> -->
+                <!-- <input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address"> -->
+              </div>
+              <div class="form-group ">
+
+                <!-- <label class="form-label" for="customFile">Default file input example</label> -->
+                <select class="form-control input-sm" v-model="transformationOption" placeholder="Email Address"
+                  @change="resetObj()">
+                  <option value="" selected disabled>Select transformation option</option>
+
+                  <option value="resize">Resize</option>
+                  <option value="crop">Crop</option>
+                  <option value="pad">Padding</option>
+
+                </select>
+
+              </div>
+              <div class="row" v-if="transformationOption=='resize' || transformationOption=='crop'">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" v-model="options.height" name="height" id="height"
+                      class="form-control input-sm floatlabel" placeholder="height">
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" v-model="options.width" name="width" id="width" class="form-control input-sm"
+                      placeholder="width">
+                  </div>
+                </div>
+              </div>
+              <div class="row" v-if="transformationOption=='crop' || transformationOption=='pad'">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" v-model="options.top" name="top" id="top"
+                      class="form-control input-sm floatlabel" placeholder="top">
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" v-model="options.left" name="left" id="left" class="form-control input-sm"
+                      placeholder="left">
+                  </div>
+                </div>
+              </div>
+              <div class="row" v-if="transformationOption=='pad'">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" v-model="options.bottom" name="bottom" id="bottom"
+                      class="form-control input-sm floatlabel" placeholder="bottom">
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <input type="text" v-model="options.right" name="right" id="right" class="form-control input-sm"
+                      placeholder="right">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <button class="btn btn-info btn-block" @click="submit()"
+                      class="form-control input-sm">Transform</button>
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                  <div class="form-group">
+                    <button v-bind:disabled="!isTransformed" class="btn btn-info btn-block" @click="downloadFile()"
+                      id="password_confirmation" class="form-control input-sm"><i class="fa fa-download"
+                        aria-hidden="true"></i>
+                      Download</button>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<style>
+  .credit-card-div span {
+    padding-top: 10px;
+  }
+
+  .credit-card-div img {
+    padding-top: 30px;
+  }
+
+  .credit-card-div .small-font {
+    font-size: 9px;
+  }
+
+  .credit-card-div .pad-adjust {
+    padding-top: 10px;
+  }
+</style>
+<script>
+
+  ////////////////////// Vue JS /////////////////////
+
+  const image_manipulation = new Vue({
+
+    el: '#image_manipulation',
+    data: {
+      showLoader: false,
+      resultantName: '',
+      fileName: 'No file chosen',
+      isSubmitted: false,
+      product: null,
+      showVariants: false,
+      file: null,
+      transformationOption: '',
+      isTransformed: false,
+      options: {
+        height: '',
+        width: '',
+        top: '',
+        left: '',
+        bottom: '',
+        right: ''
+      }
+    },
+
+    mounted() {
+      console.log("mounted")
+    },
+
+    methods: {
+      downloadFile() {
+        axios({
+
+          url: 'http://localhost:3000/download?fileName=' + this.resultantName,
+
+          method: 'GET',
+
+          responseType: 'blob',
+
+        }).then((response) => {
+
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          console.log(fileURL)
+          var fileLink = document.createElement('a');
+
+
+
+          fileLink.href = fileURL;
+
+          fileLink.setAttribute('download', this.resultantName);
+
+          document.body.appendChild(fileLink);
+
+
+
+          fileLink.click();
+
+        });
+      },
+      onFileChange: function (event) {
+        this.isTransformed = false;
+        let reader = new FileReader()
+        let image;
+        this.file = event.target.files[0];
+
+        if (this.file) {
+          this.fileName = this.file.name;
+        }
+      },
+      submit() {
+        console.log('submit', this.options)
+        let formData = new FormData();
+
+        formData.append("file", this.file);
+
+        formData.append('options', JSON.stringify(this.options));
+        formData.append('transformationOption', this.transformationOption)
+        axios.post('http://localhost:3000/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then(response => {
+          alert('Transformed Successfuly')
+          this.isTransformed = true
+          this.resultantName = response.data.resultantName;
+
+          console.log(response)
+        }).catch(error => {
+
+
+          console.log(error)
+        })
+      },
+      resetObj() {
+        Object.keys(this.options).forEach(key => {
+          this.options[key] = '';
+        });
+      }
+
+    },
+
+    computed: {
+
+
+    }
+  });
+
+
+</script>
+
+</html>
